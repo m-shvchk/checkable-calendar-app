@@ -2,64 +2,84 @@
   width: 90vw;
   margin: auto;
 }
+
 .container h2 {
-  padding-top: 4rem;
-  padding-bottom: 2rem;
-  color: #8f8f7e;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  color: #4f4f46;
 }
+
 .header {
   display: flex;
   align-items: end;
-  color: #8f8f7e;
+  color: #4f4f46;
 }
+
 .header .day {
   flex-basis: 3rem;
 }
+
 .header .all_day {
   flex-basis: 3rem;
   text-align: center;
 }
+
 .header .hour_marks {
   flex-grow: 1;
 }
+
 .hour_marks::after {
   content: "";
   display: block;
-  background: #8f8f7e;
+  background: #4f4f46;
   width: 0.05vw;
   height: 0.5rem;
 }
 
 .flex_row {
   display: flex;
-  color: #8f8f7e;
+  color: #4f4f46;
 }
+
 .flex_row .day_column {
   flex-basis: 3rem;
   height: 8.5vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0.05vw 0 0 0 #8f8f7e, 0 0.05vw 0 0 #8f8f7e,
-    0.05vw 0.05vw 0 0 #8f8f7e, 0.05vw 0 0 0 #8f8f7e inset,
-    0 0.05vw 0 0 #8f8f7e inset;
+  box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+    0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+    0 0.05vw 0 0 #4f4f46 inset;
 }
+
 .flex_row .all_day_column {
   flex-basis: 3rem;
   height: 8.5vh;
+  position: relative;
   background: #8f8f7e;
-  box-shadow: 0.05vw 0 0 0 #8f8f7e, 0 0.05vw 0 0 #8f8f7e,
-    0.05vw 0.05vw 0 0 #8f8f7e, 0.05vw 0 0 0 #8f8f7e inset,
-    0 0.05vw 0 0 #8f8f7e inset;
+  box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+    0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+    0 0.05vw 0 0 #4f4f46 inset;
+}
+
+.flex_row .all_day_column div {
+  font-size:1.5rem;
+  position: absolute; 
+  left: 50%; 
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #4f4f46;
 }
 
 .flex_row .hour_cell {
   flex-grow: 1;
   height: 8.5vh;
-  box-shadow: 0.05vw 0 0 0 #8f8f7e, 0 0.05vw 0 0 #8f8f7e,
-    0.05vw 0.05vw 0 0 #8f8f7e, 0.05vw 0 0 0 #8f8f7e inset,
-    0 0.05vw 0 0 #8f8f7e inset;
+  background: #8f8f7e;
+  box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+    0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+    0 0.05vw 0 0 #4f4f46 inset;
 }
+
 .actions {
   text-align: right;
   margin-top: 2rem;
@@ -68,6 +88,7 @@
 .actions button {
   font-size: 1rem;
 }
+
 .btn {
   text-decoration: none;
   background-color: #8f8f7e;;
@@ -84,3 +105,4 @@
   background-color: #4f4f46;
   border-color: black;
 }
+
