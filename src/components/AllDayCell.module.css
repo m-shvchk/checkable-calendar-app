@@ -1,0 +1,22 @@
+.all_day_column {
+    flex-basis: 3rem;
+    height: 8.5vh;
+    position: relative;
+    background: #8f8f7e;
+    box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+      0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+      0 0.05vw 0 0 #4f4f46 inset;
+  }
+
+  .all_day_column div {
+    font-size:1.5rem;
+    position: absolute; 
+    left: 50%; 
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .all_day_column:hover {
+    background: rgba(143, 143, 126, 0.8);
+
+  }

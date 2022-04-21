@@ -9,33 +9,6 @@
   color: #4f4f46;
 }
 
-.header {
-  display: flex;
-  align-items: end;
-  color: #4f4f46;
-}
-
-.header .day {
-  flex-basis: 3rem;
-}
-
-.header .all_day {
-  flex-basis: 3rem;
-  text-align: center;
-}
-
-.header .hour_marks {
-  flex-grow: 1;
-}
-
-.hour_marks::after {
-  content: "";
-  display: block;
-  background: #4f4f46;
-  width: 0.05vw;
-  height: 0.5rem;
-}
-
 .flex_row {
   display: flex;
   color: #4f4f46;
@@ -50,25 +23,6 @@
   box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
     0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
     0 0.05vw 0 0 #4f4f46 inset;
-}
-
-.flex_row .all_day_column {
-  flex-basis: 3rem;
-  height: 8.5vh;
-  position: relative;
-  background: #8f8f7e;
-  box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
-    0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
-    0 0.05vw 0 0 #4f4f46 inset;
-}
-
-.flex_row .all_day_column div {
-  font-size:1.5rem;
-  position: absolute; 
-  left: 50%; 
-  top: 50%;
-  transform: translate(-50%, -50%);
-  color: #4f4f46;
 }
 
 .flex_row .hour_cell {

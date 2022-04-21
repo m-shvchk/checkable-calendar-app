@@ -1,7 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import classes from "./App.module.css";
-import { BsFillCheckCircleFill } from "react-icons/bs";
 import DataCell from "./components/DataCell";
+import AllDayCell from "./components/AllDayCell";
+import Header from "./components/Header";
 
 const initialData = {
   mo: [
@@ -39,19 +40,27 @@ const initialData = {
 
 const dayToNum = { mo: 0, tu: 1, we: 2, th: 3, fr: 4, sa: 5, su: 6 };
 const numToDay = ["mo", "tu", "we", "th", "fr", "sa", "su"];
-const normalized = [];
+const normalizedArr = [];
 
 Object.entries(initialData).map(([day, value]) => {
-  normalized[dayToNum[day]] = new Array(24).fill(false);
+  normalizedArr[dayToNum[day]] = new Array(24).fill(false);
   value.map((val) => {
     const start = val.bt / 60;
     const end = (val.et + 1) / 60;
-    normalized[dayToNum[day]].fill(true, start, end);
+    normalizedArr[dayToNum[day]].fill(true, start, end);
   });
 });
 
 const App = () => {
-  const checkCellHandler = () => {};
+  const [normalized, setNormalized] = useState(normalizedArr);
+
+  const clearAllHandler = () => {
+    normalized.map((val) => {
+      val.fill(false);
+    });
+    setNormalized([...normalized]);
+  };
+
   let content = normalized.map((hours, dayIndex) => (
     <div className={classes.flex_row} key={dayIndex}>
       <div
@@ -61,20 +70,22 @@ const App = () => {
       >
         {numToDay[dayIndex].toUpperCase()}
       </div>
-      <div className={classes.all_day_column}>
-        {hours.includes(false) ? (
-          ""
-        ) : (
-          <div>
-            <BsFillCheckCircleFill />
-          </div>
-        )}
-      </div>
+
+      <AllDayCell
+        hours={hours}
+        dayIndex={dayIndex}
+        normalized={normalized}
+        setNormalized={setNormalized}
+      />
+
       {hours.map((val, hourIndex) => (
         <DataCell
           value={val}
           key={`${dayIndex}-${hourIndex}`}
-          onClick={checkCellHandler}
+          dayIndex={dayIndex}
+          hourIndex={hourIndex}
+          normalized={normalized}
+          setNormalized={setNormalized}
         />
       ))}
     </div>
@@ -84,25 +95,15 @@ const App = () => {
     <Fragment>
       <div className={classes.container}>
         <h2>SET SCHEDULE</h2>
-        <div className={classes.header}>
-          <div className={classes.day}></div>
-          <div className={classes.all_day}>ALL DAY</div>
-          <div className={classes.hour_marks}>00:00</div>
-          <div className={classes.hour_marks}>03:00</div>
-          <div className={classes.hour_marks}>06:00</div>
-          <div className={classes.hour_marks}>09:00</div>
-          <div className={classes.hour_marks}>12:00</div>
-          <div className={classes.hour_marks}>15:00</div>
-          <div className={classes.hour_marks}>18:00</div>
-          <div className={classes.hour_marks}>21:00</div>
-        </div>
+        <Header />
         {content}
 
         <div className={classes.actions}>
-          <button className={classes.btn}>CLEAR</button>
+          <button className={classes.btn} onClick={clearAllHandler}>
+            CLEAR
+          </button>
           <button className={classes.btn}>SAVE CHANGES</button>
         </div>
-        
       </div>
     </Fragment>
   );

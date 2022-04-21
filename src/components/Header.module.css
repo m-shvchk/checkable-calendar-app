@@ -1,0 +1,26 @@
+.header {
+    display: flex;
+    align-items: end;
+    color: #4f4f46;
+  }
+  
+  .header .day {
+    flex-basis: 3rem;
+  }
+  
+  .header .all_day {
+    flex-basis: 3rem;
+    text-align: center;
+  }
+  
+  .header .hour_marks {
+    flex-grow: 1;
+  }
+  
+  .hour_marks::after {
+    content: "";
+    display: block;
+    background: #4f4f46;
+    width: 0.05vw;
+    height: 0.5rem;
+  }
