@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import classes from "./App.module.css";
 import DataCell from "./components/DataCell";
 import AllDayCell from "./components/AllDayCell";
@@ -51,8 +51,14 @@ Object.entries(initialData).map(([day, value]) => {
   });
 });
 
+const initialEmptyArr = new Array(7);
+for (let i = 0; i < initialEmptyArr.length; i++) {
+  initialEmptyArr[i] = new Array(24).fill(false);
+}
+
 const App = () => {
   const [normalized, setNormalized] = useState(normalizedArr);
+  const [highlighted, setHighlighted] = useState(initialEmptyArr);
 
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
@@ -74,52 +80,40 @@ const App = () => {
     setMouseIsActive(true);
   };
 
+  // uncheck whole highlighted array whenever selectionEnd changes
+  useEffect(() => {
+    const unHighlightAll = new Array(7);
+    for (let i = 0; i < unHighlightAll.length; i++) {
+      unHighlightAll[i] = new Array(24).fill(false);
+    }
+    setHighlighted([...unHighlightAll]);
+  }, [selectionEnd]);
+
   const mouseMoveHandler = (e) => {
     if (!mouseIsActive) return;
     const id = e.target.id;
     if (id) {
       const [x, y] = id.split("-");
       setSelectionEnd({ x, y });
-      
-      // let x1, x2, y1, y2;
-      // if (selectionStart.x < selectionEnd.x || selectionStart.y < selectionEnd.y){
-      //   x1 = selectionStart.x;
-      //   y1 = selectionStart.y;
-      //   x2 = selectionEnd.x;
-      //   y2 = selectionEnd.y;
-      // } else {
-      //   x1 = selectionEnd.x;
-      //   y1 = selectionEnd.y;
-      //   x2 = selectionStart.x;
-      //   y2 = selectionStart.y;
-      // }
-      // console.log(x1, y1, x2, y2)
-      // let numToBeChecked = (x2 - x1) * 24 + y2 - y1 + 1;
-      // let x_ = x1;
-      // let y_ = y1;
-      // for (let i = 0; i < numToBeChecked; i++) {
-      //   normalized[x_][y_] = true;
-      //   setNormalized([...normalized]);
-      //   if (y_ < 23) {
-      //     y_ = y_ + 1;
-      //   }
-        
-      // }
 
-      let x1 = Math.min(selectionStart.x, selectionEnd.x);
-      let x2 = Math.max(selectionStart.x, selectionEnd.x);
-      let y1 = Math.min(selectionStart.y, selectionEnd.y);
-      let y2 = Math.max(selectionStart.y, selectionEnd.y);
-      for (let i = x1; i <= x2; i++) {
-        for (let k = y1; k <= y2; k++) {
-          normalized[i][k] = true;
-        }
+      let x1 = parseInt(selectionStart.x);
+      let y1 = parseInt(selectionStart.y);
+      let x2 = parseInt(selectionEnd.x);
+      let y2 = parseInt(selectionEnd.y);
+      // console.log(x1, y1, x2, y2)
+
+      let point_1 = x1 * 24 + y1;
+      let point_2 = x2 * 24 + y2;
+      let start = Math.min(point_1, point_2);
+      let end = Math.max(point_1, point_2);
+
+      for (let i = start; i <= end; i++) {
+        highlighted[Math.floor(i / 24)][i % 24] = true;
       }
-      setNormalized([...normalized]);
+      setHighlighted([...highlighted]);
+      console.log(highlighted);
     }
   };
-  // console.log(selectionStart)
-  // console.log(selectionEnd)
 
   const mouseUpHandler = (e) => {
     setMouseIsActive(false);
@@ -183,5 +177,3 @@ export default App;
 // let x2 = Math.max(selectionStart.x, selectionEnd.x);
 // let y1 = Math.min(selectionStart.y, selectionEnd.y);
 // let y2 = Math.max(selectionStart.y, selectionEnd.y);
-
-
