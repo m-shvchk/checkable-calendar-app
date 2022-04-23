@@ -62,7 +62,7 @@ const App = () => {
 
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
-  const [selectionEnd, setSelectionEnd] = useState();
+  // const [selectionEnd, setSelectionEnd] = useState();
 
   const clearAllHandler = () => {
     normalized.map((val) => {
@@ -80,45 +80,55 @@ const App = () => {
     setMouseIsActive(true);
   };
 
-  // uncheck whole highlighted array whenever selectionEnd changes
-  useEffect(() => {
-    const unHighlightAll = new Array(7);
-    for (let i = 0; i < unHighlightAll.length; i++) {
-      unHighlightAll[i] = new Array(24).fill(false);
-    }
-    setHighlighted([...unHighlightAll]);
-  }, [selectionEnd]);
-
   const mouseMoveHandler = (e) => {
     if (!mouseIsActive) return;
     const id = e.target.id;
     if (id) {
       const [x, y] = id.split("-");
-      setSelectionEnd({ x, y });
 
       let x1 = parseInt(selectionStart.x);
       let y1 = parseInt(selectionStart.y);
-      let x2 = parseInt(selectionEnd.x);
-      let y2 = parseInt(selectionEnd.y);
-      // console.log(x1, y1, x2, y2)
+      let x2 = parseInt(x);
+      let y2 = parseInt(y);
 
       let point_1 = x1 * 24 + y1;
       let point_2 = x2 * 24 + y2;
       let start = Math.min(point_1, point_2);
       let end = Math.max(point_1, point_2);
 
+      highlighted.forEach((hours, dayIndex)=>{
+        hours.forEach((hour, hourIndex)=>{
+          highlighted[dayIndex][hourIndex] = false
+        })
+      })
+      setHighlighted([...highlighted])
+      
       for (let i = start; i <= end; i++) {
         highlighted[Math.floor(i / 24)][i % 24] = true;
       }
       setHighlighted([...highlighted]);
-      console.log(highlighted);
     }
   };
 
   const mouseUpHandler = (e) => {
+    highlighted.forEach((hours, dayIndex) => {
+      hours.forEach((hour, hourIndex) => {
+        if(hour){
+          normalized[dayIndex][hourIndex] = true;
+        }
+      })
+    })
+    setNormalized([...normalized]);
+
+    highlighted.forEach((hours, dayIndex)=>{
+      hours.forEach((hour, hourIndex)=>{
+        highlighted[dayIndex][hourIndex] = false
+      })
+    })
+    setHighlighted([...highlighted])
+
     setMouseIsActive(false);
     setSelectionStart("");
-    setSelectionEnd("");
   };
 
   let content = normalized.map((hours, dayIndex) => (
@@ -143,6 +153,7 @@ const App = () => {
           hourIndex={hourIndex}
           normalized={normalized}
           setNormalized={setNormalized}
+          isHighlighted={highlighted[dayIndex][hourIndex]}
         />
       ))}
     </div>
@@ -172,8 +183,3 @@ const App = () => {
 };
 
 export default App;
-
-// let x1 = Math.min(selectionStart.x, selectionEnd.x);
-// let x2 = Math.max(selectionStart.x, selectionEnd.x);
-// let y1 = Math.min(selectionStart.y, selectionEnd.y);
-// let y2 = Math.max(selectionStart.y, selectionEnd.y);
