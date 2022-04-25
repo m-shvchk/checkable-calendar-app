@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import classes from "./App.module.css";
 import DataCell from "./components/DataCell";
 import AllDayCell from "./components/AllDayCell";
@@ -42,9 +42,9 @@ const dayToNum = { mo: 0, tu: 1, we: 2, th: 3, fr: 4, sa: 5, su: 6 };
 const numToDay = ["mo", "tu", "we", "th", "fr", "sa", "su"];
 const normalizedArr = [];
 
-Object.entries(initialData).map(([day, value]) => {
+Object.entries(initialData).forEach(([day, value]) => {
   normalizedArr[dayToNum[day]] = new Array(24).fill(false);
-  value.map((val) => {
+  value.forEach((val) => {
     const start = val.bt / 60;
     const end = (val.et + 1) / 60;
     normalizedArr[dayToNum[day]].fill(true, start, end);
@@ -62,10 +62,9 @@ const App = () => {
 
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
-  // const [selectionEnd, setSelectionEnd] = useState();
 
   const clearAllHandler = () => {
-    normalized.map((val) => {
+    normalized.forEach((val) => {
       val.fill(false);
     });
     setNormalized([...normalized]);
