@@ -25,3 +25,7 @@
 .hour__cell_checked:hover {
   background: rgba(143, 143, 126, 0.5);
 }
+/* .hour__cell_shrinking{
+  flex-basis: 0;
+  display: none;
+} */

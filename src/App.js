@@ -56,6 +56,16 @@ for (let i = 0; i < initialEmptyArr.length; i++) {
   initialEmptyArr[i] = new Array(24).fill(false);
 }
 
+const inithialRanges = new Array(168);
+for (let i = 0; i < inithialRanges.length; i++) {
+  inithialRanges[i] = {
+    isHighlighting: false,
+    isGrowing: false,
+    isShrinking: false,
+    growFactor: null,
+  };
+}
+
 const App = () => {
   const [normalized, setNormalized] = useState(normalizedArr);
   const [highlighted, setHighlighted] = useState(initialEmptyArr);
@@ -63,11 +73,18 @@ const App = () => {
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
 
+  const [isSettingRange, setIsSettingRange] = useState(false);
+  const [ranges, setRanges] = useState(inithialRanges);
+
   const clearAllHandler = () => {
     normalized.forEach((val) => {
       val.fill(false);
     });
     setNormalized([...normalized]);
+  };
+
+  const setRangesHandler = () => {
+    setIsSettingRange(!isSettingRange);
   };
 
   const mouseDownHandler = (e) => {
@@ -95,37 +112,84 @@ const App = () => {
       let start = Math.min(point_1, point_2);
       let end = Math.max(point_1, point_2);
 
-      highlighted.forEach((hours, dayIndex)=>{
-        hours.forEach((hour, hourIndex)=>{
-          highlighted[dayIndex][hourIndex] = false
-        })
-      })
-      setHighlighted([...highlighted])
-      
-      for (let i = start; i <= end; i++) {
-        highlighted[Math.floor(i / 24)][i % 24] = true;
+      if (!isSettingRange) {
+        highlighted.forEach((hours, dayIndex) => {
+          hours.forEach((hour, hourIndex) => {
+            highlighted[dayIndex][hourIndex] = false;
+          });
+        });
+        setHighlighted([...highlighted]);
+
+        for (let i = start; i <= end; i++) {
+          highlighted[Math.floor(i / 24)][i % 24] = true;
+        }
+        setHighlighted([...highlighted]);
       }
-      setHighlighted([...highlighted]);
+      if (isSettingRange) {
+        ranges.forEach((item) => {
+          item.isHighlighting = false;
+        });
+        setRanges([...ranges]);
+
+        for (let i = start; i <= end; i++) {
+          ranges[i].isHighlighting = true;
+        }
+        setRanges([...ranges]);
+      }
     }
   };
 
   const mouseUpHandler = (e) => {
-    highlighted.forEach((hours, dayIndex) => {
-      hours.forEach((hour, hourIndex) => {
-        if(hour){
-          normalized[dayIndex][hourIndex] = true;
+    if (!isSettingRange) {
+      highlighted.forEach((hours, dayIndex) => {
+        hours.forEach((hour, hourIndex) => {
+          if (hour) {
+            normalized[dayIndex][hourIndex] = true;
+          }
+        });
+      });
+      setNormalized([...normalized]);
+
+      highlighted.forEach((hours, dayIndex) => {
+        hours.forEach((hour, hourIndex) => {
+          highlighted[dayIndex][hourIndex] = false;
+        });
+      });
+      setHighlighted([...highlighted]);
+    }
+
+    if (isSettingRange) {
+      let count = 0;
+      let rangeIsStarted = false;
+      for (let i = 0; i < ranges.length; i++) {
+        if (rangeIsStarted) {
+          count = count + 1;
+          ranges[i].isShrinking = true;
         }
-      })
-    })
-    setNormalized([...normalized]);
 
-    highlighted.forEach((hours, dayIndex)=>{
-      hours.forEach((hour, hourIndex)=>{
-        highlighted[dayIndex][hourIndex] = false
-      })
-    })
-    setHighlighted([...highlighted])
+        if (
+          (i % 24 === 0 || !ranges[i - 1].isHighlighting) &&
+          ranges[i].isHighlighting
+        ) {
+          ranges[i].isGrowing = true;
+          rangeIsStarted = true;
+        }
 
+        if (
+          ((i + 1) % 24 === 0 || !ranges[i + 1].isHighlighting) &&
+          ranges[i].isHighlighting
+        ) {
+          ranges[i - count].growFactor = count + 1;
+          rangeIsStarted = false;
+          count = 0;
+        }
+      }
+      ranges.forEach((item) => {
+        item.isHighlighting = false;
+      });
+      setRanges([...ranges]);
+    }
+    console.log(ranges);
     setMouseIsActive(false);
     setSelectionStart("");
   };
@@ -141,6 +205,7 @@ const App = () => {
         dayIndex={dayIndex}
         normalized={normalized}
         setNormalized={setNormalized}
+        isSettingRange={isSettingRange}
       />
 
       {hours.map((val, hourIndex) => (
@@ -153,6 +218,9 @@ const App = () => {
           normalized={normalized}
           setNormalized={setNormalized}
           isHighlighted={highlighted[dayIndex][hourIndex]}
+          isSettingRange={isSettingRange}
+          ranges={ranges}
+          setRanges={setRanges}
         />
       ))}
     </div>
@@ -171,8 +239,11 @@ const App = () => {
         {content}
 
         <div className={classes.actions}>
+          <button className={classes.btn} onClick={setRangesHandler}>
+            {isSettingRange ? "CLEAR RANGES" : "SET RANGES"}
+          </button>
           <button className={classes.btn} onClick={clearAllHandler}>
-            CLEAR
+            CLEAR HIGHLIGHTED
           </button>
           <button className={classes.btn}>SAVE CHANGES</button>
         </div>

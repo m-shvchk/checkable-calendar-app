@@ -12,6 +12,9 @@
 .flex_row {
   display: flex;
   color: #4f4f46;
+  box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+  0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+  0 0.05vw 0 0 #4f4f46 inset;
 }
 
 .flex_row .day_column {
