@@ -134,9 +134,9 @@ const App = () => {
     setSelectionStart("");
   };
 
-  const mouseDownRangesHandler = () => {}
-  const mouseMoveRangesHandler = () => {}
-  const mouseUpRangesHandler = () => {}
+  // const mouseDownRangesHandler = () => {}
+  // const mouseMoveRangesHandler = () => {}
+  // const mouseUpRangesHandler = () => {}
 
   return (
     <Fragment>
@@ -163,15 +163,15 @@ const App = () => {
           <Ranges
             normalized={normalized}
             numToDay={numToDay}
-            onMouseDown={mouseDownRangesHandler}
-            onMouseMove={mouseMoveRangesHandler}
-            onMouseUp={mouseUpRangesHandler}
+            // onMouseDown={mouseDownRangesHandler}
+            // onMouseMove={mouseMoveRangesHandler}
+            // onMouseUp={mouseUpRangesHandler}
           />
         )}
 
         <div className={classes.actions}>
           <button className={classes.btn} onClick={calendarRangesHandler}>
-            {calendarRangesTogglee ? "SET SCHEDULE" : "SET RANGES"}
+            {calendarRangesTogglee ? "SET RANGES" : "SET SCHEDULE"}
           </button>
           <button className={classes.btn} onClick={clearAllHandler}>
             CLEAR
