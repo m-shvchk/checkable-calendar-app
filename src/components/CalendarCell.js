@@ -1,7 +1,7 @@
 import React from "react";
-import classes from "./DataCell.module.css";
+import classes from "./CalendarCell.module.css";
 
-const DataCell = ({
+const CalendarCell = ({
   value,
   normalized,
   setNormalized,
@@ -32,4 +32,4 @@ const DataCell = ({
   );
 };
 
-export default DataCell;
+export default CalendarCell;

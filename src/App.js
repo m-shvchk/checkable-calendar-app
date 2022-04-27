@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from "react";
 import classes from "./App.module.css";
-import DataCell from "./components/DataCell";
-import AllDayCell from "./components/AllDayCell";
 import Header from "./components/Header";
+import Calendar from "./components/Calendar";
+import Ranges from "./components/Ranges";
 
 const initialData = {
   mo: [
@@ -59,9 +59,13 @@ for (let i = 0; i < initialEmptyArr.length; i++) {
 const App = () => {
   const [normalized, setNormalized] = useState(normalizedArr);
   const [highlighted, setHighlighted] = useState(initialEmptyArr);
-
+  const [calendarRangesTogglee, setCalendarRangesTogglee] = useState(true);
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
+
+  const calendarRangesHandler = () => {
+    setCalendarRangesTogglee(!calendarRangesTogglee);
+  };
 
   const clearAllHandler = () => {
     normalized.forEach((val) => {
@@ -70,7 +74,7 @@ const App = () => {
     setNormalized([...normalized]);
   };
 
-  const mouseDownHandler = (e) => {
+  const mouseDownCalendarHandler = (e) => {
     const id = e.target.id;
     if (!id) return;
     const [x, y] = id.split("-");
@@ -79,7 +83,7 @@ const App = () => {
     setMouseIsActive(true);
   };
 
-  const mouseMoveHandler = (e) => {
+  const mouseMoveCalendarHandler = (e) => {
     if (!mouseIsActive) return;
     const id = e.target.id;
     if (id) {
@@ -95,13 +99,13 @@ const App = () => {
       let start = Math.min(point_1, point_2);
       let end = Math.max(point_1, point_2);
 
-      highlighted.forEach((hours, dayIndex)=>{
-        hours.forEach((hour, hourIndex)=>{
-          highlighted[dayIndex][hourIndex] = false
-        })
-      })
-      setHighlighted([...highlighted])
-      
+      highlighted.forEach((hours, dayIndex) => {
+        hours.forEach((hour, hourIndex) => {
+          highlighted[dayIndex][hourIndex] = false;
+        });
+      });
+      setHighlighted([...highlighted]);
+
       for (let i = start; i <= end; i++) {
         highlighted[Math.floor(i / 24)][i % 24] = true;
       }
@@ -109,68 +113,66 @@ const App = () => {
     }
   };
 
-  const mouseUpHandler = (e) => {
+  const mouseUpCalendarHandler = (e) => {
     highlighted.forEach((hours, dayIndex) => {
       hours.forEach((hour, hourIndex) => {
-        if(hour){
+        if (hour) {
           normalized[dayIndex][hourIndex] = true;
         }
-      })
-    })
+      });
+    });
     setNormalized([...normalized]);
 
-    highlighted.forEach((hours, dayIndex)=>{
-      hours.forEach((hour, hourIndex)=>{
-        highlighted[dayIndex][hourIndex] = false
-      })
-    })
-    setHighlighted([...highlighted])
+    highlighted.forEach((hours, dayIndex) => {
+      hours.forEach((hour, hourIndex) => {
+        highlighted[dayIndex][hourIndex] = false;
+      });
+    });
+    setHighlighted([...highlighted]);
 
     setMouseIsActive(false);
     setSelectionStart("");
   };
 
-  let content = normalized.map((hours, dayIndex) => (
-    <div className={classes.flex_row} key={dayIndex}>
-      <div className={classes.day_column} key={numToDay[dayIndex]}>
-        {numToDay[dayIndex].toUpperCase()}
-      </div>
-
-      <AllDayCell
-        hours={hours}
-        dayIndex={dayIndex}
-        normalized={normalized}
-        setNormalized={setNormalized}
-      />
-
-      {hours.map((val, hourIndex) => (
-        <DataCell
-          value={val}
-          key={`${dayIndex}-${hourIndex}`}
-          id={`${dayIndex}-${hourIndex}`}
-          dayIndex={dayIndex}
-          hourIndex={hourIndex}
-          normalized={normalized}
-          setNormalized={setNormalized}
-          isHighlighted={highlighted[dayIndex][hourIndex]}
-        />
-      ))}
-    </div>
-  ));
+  const mouseDownRangesHandler = () => {}
+  const mouseMoveRangesHandler = () => {}
+  const mouseUpRangesHandler = () => {}
 
   return (
     <Fragment>
-      <div
-        className={classes.container}
-        onMouseDown={mouseDownHandler}
-        onMouseMove={mouseMoveHandler}
-        onMouseUp={mouseUpHandler}
-      >
-        <h2>SET SCHEDULE</h2>
-        <Header />
-        {content}
+      <div className={classes.container}>
+        {calendarRangesTogglee ? (
+          <h2>SETTING SCHEDULE</h2>
+        ) : (
+          <h2>SETTING RANGES</h2>
+        )}
+
+        <Header calendarRangesTogglee={calendarRangesTogglee} />
+
+        {calendarRangesTogglee ? (
+          <Calendar
+            normalized={normalized}
+            setNormalized={setNormalized}
+            highlighted={highlighted}
+            numToDay={numToDay}
+            onMouseDown={mouseDownCalendarHandler}
+            onMouseMove={mouseMoveCalendarHandler}
+            onMouseUp={mouseUpCalendarHandler}
+          />
+        ) : (
+          <Ranges
+            normalized={normalized}
+            numToDay={numToDay}
+            onMouseDown={mouseDownRangesHandler}
+            onMouseMove={mouseMoveRangesHandler}
+            onMouseUp={mouseUpRangesHandler}
+          />
+        )}
 
         <div className={classes.actions}>
+          <button className={classes.btn} onClick={calendarRangesHandler}>
+            {calendarRangesTogglee ? "SET SCHEDULE" : "SET RANGES"}
+          </button>
           <button className={classes.btn} onClick={clearAllHandler}>
             CLEAR
           </button>

@@ -1,0 +1,28 @@
+.hour__cell {
+    flex-grow: 1;
+    height: 8.5vh;
+    box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+      0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+      0 0.05vw 0 0 #4f4f46 inset;
+  }
+  
+  .hour__cell_highlighted {
+    background: rgba(143, 143, 126, 0.3);
+  }
+  
+  .hour__cell_checked {
+    flex-grow: 1;
+    height: 8.5vh;
+    background: rgba(143, 143, 126, 0.6);
+    box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+      0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+      0 0.05vw 0 0 #4f4f46 inset;
+  }
+  
+  .hour__cell:hover {
+    background: rgba(143, 143, 126, 0.3);
+  }
+  .hour__cell_checked:hover {
+    background: rgba(143, 143, 126, 0.5);
+  }
+  

@@ -1,0 +1,26 @@
+  .flex_row {
+    display: flex;
+    color: #4f4f46;
+  }
+  
+  .flex_row .day_column {
+    flex-basis: 3rem;
+    height: 8.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+      0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+      0 0.05vw 0 0 #4f4f46 inset;
+  }
+  
+  .flex_row .hour_cell {
+    flex-grow: 1;
+    height: 8.5vh;
+    background: #8f8f7e;
+    box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
+      0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
+      0 0.05vw 0 0 #4f4f46 inset;
+  }
+  
+  

@@ -1,12 +1,18 @@
 import React, { Fragment } from "react";
-import classes from './Header.module.css'
+import classes from "./Header.module.css";
 
-const Header = () => {
+const Header = ({ calendarRangesTogglee }) => {
+
+
   return (
     <Fragment>
       <div className={classes.header}>
         <div className={classes.day}></div>
-        <div className={classes.all_day}>ALL DAY</div>
+        {calendarRangesTogglee ? (
+          <div className={classes.all_day}>ALL DAY</div>
+        ) : (
+          ""
+        )}
         <div className={classes.hour_marks}>00:00</div>
         <div className={classes.hour_marks}>03:00</div>
         <div className={classes.hour_marks}>06:00</div>
