@@ -65,6 +65,7 @@ const App = () => {
 
   const calendarRangesHandler = () => {
     setCalendarRangesTogglee(!calendarRangesTogglee);
+    
   };
 
   const clearAllHandler = () => {
@@ -133,10 +134,6 @@ const App = () => {
     setMouseIsActive(false);
     setSelectionStart("");
   };
-
-  // const mouseDownRangesHandler = () => {}
-  // const mouseMoveRangesHandler = () => {}
-  // const mouseUpRangesHandler = () => {}
 
   return (
     <Fragment>

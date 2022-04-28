@@ -2,30 +2,13 @@ import React from "react";
 import classes from "./RangesCell.module.css";
 
 const RangesCell = ({
-  ranges,
-  setRanges,
   isHighlighted,
   isGrowing,
   isShrinking,
   growFactor,
-  cellIndex,
   id,
+  onClick,
 }) => {
-
-  const checkCellHandler = () => {
-      if (ranges[cellIndex].isGrowing) {
-        for (let i = cellIndex + 1; i < (cellIndex + ranges[cellIndex].growFactor); i++) {
-          // console.log(i)
-          ranges[i].isShrinking = false;
-          ranges[i].isChecked = false;
-        }
-        ranges[cellIndex].isGrowing = false;
-        ranges[cellIndex].isGrowing = false;
-        ranges[cellIndex].growFactor = null;
-        setRanges([...ranges]);
-      }
-    
-  };
 
   const rangesStyle = {
     boxShadow: isGrowing
@@ -45,7 +28,7 @@ const RangesCell = ({
       className={`${classes.hour__cell} ${highlighted_class}`}
       style={rangesStyle}
       id={id}
-      onClick={checkCellHandler}
+      onClick={onClick}
     ></div>
   );
 };

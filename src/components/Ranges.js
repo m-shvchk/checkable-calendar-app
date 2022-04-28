@@ -17,6 +17,25 @@ const Ranges = ({ normalized, numToDay }) => {
   const [ranges, setRanges] = useState(inithialRanges);
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
+  const [sameCell, setSameCell] = useState(false);
+
+  const checkCellHandler = (dayIndex, hourIndex) => {
+    if(!sameCell){
+      let cellIndex = dayIndex * 24 + hourIndex 
+      if (ranges[cellIndex].isGrowing) {
+        for (let i = cellIndex + 1; i < (cellIndex + ranges[cellIndex].growFactor); i++) {
+          ranges[i].isShrinking = false;
+          ranges[i].isChecked = false;
+        }
+        ranges[cellIndex].isGrowing = false;
+        ranges[cellIndex].isChecked = false;
+        ranges[cellIndex].growFactor = null;
+        setRanges([...ranges]);
+      }
+    } else{
+      setSameCell(false)
+    }
+};
 
   const mouseDownRangesHandler = (e) => {
     const id = e.target.id;
@@ -42,6 +61,12 @@ const Ranges = ({ normalized, numToDay }) => {
       let point_2 = x2 * 24 + y2;
       let start = Math.min(point_1, point_2);
       let end = Math.max(point_1, point_2);
+      
+      if(start === end) {
+        setSameCell(true)
+      }else{
+        setSameCell(false)
+      }
 
       ranges.forEach((item) => {
         item.isHighlighted = false;
@@ -60,7 +85,7 @@ const Ranges = ({ normalized, numToDay }) => {
 
     for (let i = 0; i < ranges.length; i++) {
       // console.log('i: ', i, ' count: ', count, ' started ', rangeIsStarted)
-      
+
       if (ranges[i].isChecked) {
         ranges[i].isHighlighted = false;
       }
@@ -69,14 +94,22 @@ const Ranges = ({ normalized, numToDay }) => {
         ranges[i].isShrinking = true;
       }
       if (
-        (i % 24 === 0 || ranges[i - 1].isChecked || !ranges[i - 1].isHighlighted) &&
-        ranges[i].isHighlighted
+        (
+          i % 24 === 0 ||
+          ranges[i - 1].isChecked ||
+          !ranges[i - 1].isHighlighted
+        )
+        && ranges[i].isHighlighted
       ) {
         ranges[i].isGrowing = true;
         rangeIsStarted = true;
+        console.log(ranges[i].isGrowing)
+        // if(ranges[i].isGrowing) debugger
       }
       if (
-        ((i + 1) % 24 === 0 || ranges[i + 1].isChecked || !ranges[i + 1].isHighlighted) &&
+        ((i + 1) % 24 === 0 ||
+          ranges[i + 1].isChecked ||
+          !ranges[i + 1].isHighlighted) &&
         ranges[i].isHighlighted
       ) {
         ranges[i - count].growFactor = count + 1;
@@ -85,7 +118,7 @@ const Ranges = ({ normalized, numToDay }) => {
       }
     }
     ranges.forEach((item) => {
-      if(item.isHighlighted){
+      if (item.isHighlighted) {
         item.isChecked = true;
       }
       item.isHighlighted = false;
@@ -106,14 +139,12 @@ const Ranges = ({ normalized, numToDay }) => {
         <RangesCell
           key={`${dayIndex}-${hourIndex}`}
           id={`${dayIndex}-${hourIndex}`}
-          ranges={ranges}
-          setRanges={setRanges}
-          cellIndex={dayIndex* 24 + hourIndex}
           isHighlighted={ranges[dayIndex * 24 + hourIndex].isHighlighted}
           isChecked={ranges[dayIndex * 24 + hourIndex].isChecked}
           isGrowing={ranges[dayIndex * 24 + hourIndex].isGrowing}
           isShrinking={ranges[dayIndex * 24 + hourIndex].isShrinking}
           growFactor={ranges[dayIndex * 24 + hourIndex].growFactor}
+          onClick={() => checkCellHandler(dayIndex, hourIndex)}
         />
       ))}
     </div>

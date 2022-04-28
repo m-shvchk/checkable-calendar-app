@@ -35,6 +35,10 @@ const Calendar = ({
           normalized={normalized}
           setNormalized={setNormalized}
           isHighlighted={highlighted[dayIndex][hourIndex]}
+          onClick={() => {
+            normalized[dayIndex][hourIndex] = !normalized[dayIndex][hourIndex];
+            setNormalized([...normalized]);
+          }}
         />
       ))}
     </div>

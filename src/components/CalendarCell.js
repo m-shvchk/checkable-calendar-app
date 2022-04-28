@@ -9,11 +9,12 @@ const CalendarCell = ({
   hourIndex,
   id,
   isHighlighted,
+  onClick,
 }) => {
-  const checkCellHandler = () => {
-    normalized[dayIndex][hourIndex] = !value;
-    setNormalized([...normalized]);
-  };
+  // const checkCellHandler = () => {
+  //   normalized[dayIndex][hourIndex] = !value;
+  //   setNormalized([...normalized]);
+  // };
 
   let checked_class = value
     ? `${classes.hour__cell_checked}`
@@ -27,7 +28,7 @@ const CalendarCell = ({
     <div
       className={`${checked_class} ${highlighted_class}`}
       id={id}
-      onClick={checkCellHandler}
+      onClick={onClick}
     ></div>
   );
 };
