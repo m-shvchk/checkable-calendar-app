@@ -2,6 +2,14 @@ import { useState } from "react";
 import classes from "./Ranges.module.css";
 import RangesCell from "./RangesCell";
 
+// const dayToNum = { mo: 0, tu: 1, we: 2, th: 3, fr: 4, sa: 5, su: 6 };
+const numToDay = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+
+const normalized = new Array(7);
+for (let i = 0; i < normalized.length; i++) {
+  normalized[i] = new Array(24).fill(false);
+}
+
 const inithialRanges = new Array(168);
 for (let i = 0; i < inithialRanges.length; i++) {
   inithialRanges[i] = {
@@ -13,7 +21,7 @@ for (let i = 0; i < inithialRanges.length; i++) {
   };
 }
 
-const Ranges = ({ normalized, numToDay }) => {
+const Ranges = () => {
   const [ranges, setRanges] = useState(inithialRanges);
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();

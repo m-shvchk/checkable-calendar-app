@@ -4,9 +4,14 @@
 }
 
 .container h2 {
+  color: #4f4f46;
+}
+
+.container_top {
   padding-top: 2rem;
   padding-bottom: 1rem;
-  color: #4f4f46;
+  display: flex;
+  justify-content: space-between;
 }
 
 .actions {
@@ -19,6 +24,7 @@
 }
 
 .btn {
+  font-size: 1rem;
   text-decoration: none;
   background-color: #8f8f7e;
   color: white;
