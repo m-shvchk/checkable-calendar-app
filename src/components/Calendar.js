@@ -1,7 +1,7 @@
 import classes from "./Calendar.module.css";
 import CalendarCell from "./CalendarCell";
 import AllDayCell from "./AllDayCell";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 
 const initialData = {
   mo: [
@@ -56,12 +56,10 @@ for (let i = 0; i < initialEmptyArr.length; i++) {
 }
 
 const Calendar = () => {
-
   const [normalized, setNormalized] = useState(normalizedArr);
   const [highlighted, setHighlighted] = useState(initialEmptyArr);
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
-
 
   const clearAllHandler = () => {
     normalized.forEach((val) => {
@@ -161,16 +159,23 @@ const Calendar = () => {
       ))}
     </div>
   ));
-  
 
   return (
-    <div
-      onMouseDown={mouseDownCalendarHandler}
-      onMouseMove={mouseMoveCalendarHandler}
-      onMouseUp={mouseUpCalendarHandler}
-    >
-      {content}
-    </div>
+    <Fragment>
+      <div
+        onMouseDown={mouseDownCalendarHandler}
+        onMouseMove={mouseMoveCalendarHandler}
+        onMouseUp={mouseUpCalendarHandler}
+      >
+        {content}
+      </div>
+      <div className={classes.actions}>
+        <button className={classes.btn} onClick={clearAllHandler}>
+          CLEAR
+        </button>
+        <button className={classes.btn}>SAVE CHANGES</button>
+      </div>
+    </Fragment>
   );
 };
 

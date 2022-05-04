@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import classes from "./Ranges.module.css";
 import RangesCell from "./RangesCell";
 
@@ -28,10 +28,14 @@ const Ranges = () => {
   const [sameCell, setSameCell] = useState(false);
 
   const checkCellHandler = (dayIndex, hourIndex) => {
-    if(!sameCell){
-      let cellIndex = dayIndex * 24 + hourIndex 
+    if (!sameCell) {
+      let cellIndex = dayIndex * 24 + hourIndex;
       if (ranges[cellIndex].isGrowing) {
-        for (let i = cellIndex + 1; i < (cellIndex + ranges[cellIndex].growFactor); i++) {
+        for (
+          let i = cellIndex + 1;
+          i < cellIndex + ranges[cellIndex].growFactor;
+          i++
+        ) {
           ranges[i].isShrinking = false;
           ranges[i].isChecked = false;
         }
@@ -40,10 +44,10 @@ const Ranges = () => {
         ranges[cellIndex].growFactor = null;
         setRanges([...ranges]);
       }
-    } else{
-      setSameCell(false)
+    } else {
+      setSameCell(false);
     }
-};
+  };
 
   const mouseDownRangesHandler = (e) => {
     const id = e.target.id;
@@ -69,11 +73,11 @@ const Ranges = () => {
       let point_2 = x2 * 24 + y2;
       let start = Math.min(point_1, point_2);
       let end = Math.max(point_1, point_2);
-      
-      if(start === end) {
-        setSameCell(true)
-      }else{
-        setSameCell(false)
+
+      if (start === end) {
+        setSameCell(true);
+      } else {
+        setSameCell(false);
       }
 
       ranges.forEach((item) => {
@@ -102,16 +106,14 @@ const Ranges = () => {
         ranges[i].isShrinking = true;
       }
       if (
-        (
-          i % 24 === 0 ||
+        (i % 24 === 0 ||
           ranges[i - 1].isChecked ||
-          !ranges[i - 1].isHighlighted
-        )
-        && ranges[i].isHighlighted
+          !ranges[i - 1].isHighlighted) &&
+        ranges[i].isHighlighted
       ) {
         ranges[i].isGrowing = true;
         rangeIsStarted = true;
-        console.log(ranges[i].isGrowing)
+        console.log(ranges[i].isGrowing);
         // if(ranges[i].isGrowing) debugger
       }
       if (
@@ -159,13 +161,22 @@ const Ranges = () => {
   ));
 
   return (
-    <div
-      onMouseDown={mouseDownRangesHandler}
-      onMouseMove={mouseMoveRangesHandler}
-      onMouseUp={mouseUpRangesHandler}
-    >
-      {content}
-    </div>
+    <Fragment>
+      <div
+        onMouseDown={mouseDownRangesHandler}
+        onMouseMove={mouseMoveRangesHandler}
+        onMouseUp={mouseUpRangesHandler}
+      >
+        {content}
+      </div>
+      <div className={classes.actions}>
+          <button className={classes.btn} >
+            CLEAR
+          </button>
+          <button className={classes.btn}>SAVE CHANGES</button>
+        </div>
+
+    </Fragment>
   );
 };
 

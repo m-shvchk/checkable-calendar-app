@@ -18,5 +18,5 @@
 
   .all_day_column:hover {
     background: rgba(143, 143, 126, 0.8);
-
+    cursor: pointer;
   }

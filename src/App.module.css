@@ -14,30 +14,22 @@
   justify-content: space-between;
 }
 
-.actions {
-  text-align: right;
-  margin-top: 2rem;
-}
-
-.actions button {
-  font-size: 1rem;
-}
-
 .btn {
   font-size: 1rem;
+  font-weight: bold;
   text-decoration: none;
-  background-color: #8f8f7e;
-  color: white;
+  background-color: #d1d1cd;
+  color: black;
   border-radius: 4px;
   padding: 0.5rem 1rem;
-  border: 1px solid #4f4f46;
+  border: 1px solid black;
   cursor: pointer;
   margin-left: 0.2rem;
 }
 
 .btn:hover,
 .btn:active {
-  background-color: #4f4f46;
+  background-color: rgba(143, 143, 126, 0.3);
   border-color: black;
 }
 

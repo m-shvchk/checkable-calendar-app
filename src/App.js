@@ -11,13 +11,6 @@ const App = () => {
     setCalendarRangesTogglee(!calendarRangesTogglee);
   };
 
-  const clearAllHandler = () => {
-    // normalized.forEach((val) => {
-    //   val.fill(false);
-    // });
-    // setNormalized([...normalized]);
-  };
-
   return (
     <Fragment>
       <div className={classes.container}>
@@ -36,12 +29,6 @@ const App = () => {
 
         {calendarRangesTogglee ? <Calendar /> : <Ranges />}
 
-        <div className={classes.actions}>
-          <button className={classes.btn} onClick={clearAllHandler}>
-            CLEAR
-          </button>
-          <button className={classes.btn}>SAVE CHANGES</button>
-        </div>
       </div>
     </Fragment>
   );
