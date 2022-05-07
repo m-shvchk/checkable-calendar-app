@@ -25,10 +25,20 @@ const Ranges = () => {
   const [ranges, setRanges] = useState(inithialRanges);
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
-  const [sameCell, setSameCell] = useState(false);
+  const [selectionEnd, setSelectionEnd] = useState();
+
+  const clearAllHandler = () => {
+    ranges.forEach(item => {
+      item.isHighlighted = false;
+      item.isChecked = false;
+      item.isGrowing = false;
+      item.isShrinking = false;
+      item.growFactor = null;
+    })
+    setRanges([...ranges])
+  }
 
   const checkCellHandler = (dayIndex, hourIndex) => {
-    if (!sameCell) {
       let cellIndex = dayIndex * 24 + hourIndex;
       if (ranges[cellIndex].isGrowing) {
         for (
@@ -42,11 +52,12 @@ const Ranges = () => {
         ranges[cellIndex].isGrowing = false;
         ranges[cellIndex].isChecked = false;
         ranges[cellIndex].growFactor = null;
-        setRanges([...ranges]);
+      } else{
+        ranges[cellIndex].isChecked = true;
+        ranges[cellIndex].isGrowing = true;
+        ranges[cellIndex].growFactor = 1;
       }
-    } else {
-      setSameCell(false);
-    }
+      setRanges([...ranges]);
   };
 
   const mouseDownRangesHandler = (e) => {
@@ -63,6 +74,7 @@ const Ranges = () => {
     const id = e.target.id;
     if (id) {
       const [x, y] = id.split("-");
+      setSelectionEnd({x, y})
 
       let x1 = parseInt(selectionStart.x);
       let y1 = parseInt(selectionStart.y);
@@ -73,12 +85,6 @@ const Ranges = () => {
       let point_2 = x2 * 24 + y2;
       let start = Math.min(point_1, point_2);
       let end = Math.max(point_1, point_2);
-
-      if (start === end) {
-        setSameCell(true);
-      } else {
-        setSameCell(false);
-      }
 
       ranges.forEach((item) => {
         item.isHighlighted = false;
@@ -92,39 +98,41 @@ const Ranges = () => {
     }
   };
   const mouseUpRangesHandler = (e) => {
-    let count = 0;
-    let rangeIsStarted = false;
-
-    for (let i = 0; i < ranges.length; i++) {
-      // console.log('i: ', i, ' count: ', count, ' started ', rangeIsStarted)
-
-      if (ranges[i].isChecked) {
-        ranges[i].isHighlighted = false;
-      }
-      if (rangeIsStarted) {
-        count = count + 1;
-        ranges[i].isShrinking = true;
-      }
-      if (
-        (i % 24 === 0 ||
-          ranges[i - 1].isChecked ||
-          !ranges[i - 1].isHighlighted) &&
-        ranges[i].isHighlighted
-      ) {
-        ranges[i].isGrowing = true;
-        rangeIsStarted = true;
-        console.log(ranges[i].isGrowing);
-        // if(ranges[i].isGrowing) debugger
-      }
-      if (
-        ((i + 1) % 24 === 0 ||
-          ranges[i + 1].isChecked ||
-          !ranges[i + 1].isHighlighted) &&
-        ranges[i].isHighlighted
-      ) {
-        ranges[i - count].growFactor = count + 1;
-        rangeIsStarted = false;
-        count = 0;
+    if(selectionStart.x !== selectionEnd.x || selectionStart.y !== selectionEnd.y){
+      let count = 0;
+      let rangeIsStarted = false;
+  
+      for (let i = 0; i < ranges.length; i++) {
+        // console.log('i: ', i, ' count: ', count, ' started ', rangeIsStarted)
+  
+        if (ranges[i].isChecked) {
+          ranges[i].isHighlighted = false;
+        }
+        if (rangeIsStarted) {
+          count = count + 1;
+          ranges[i].isShrinking = true;
+        }
+        if (
+          (i % 24 === 0 ||
+            ranges[i - 1].isChecked ||
+            !ranges[i - 1].isHighlighted) &&
+          ranges[i].isHighlighted
+        ) {
+          ranges[i].isGrowing = true;
+          rangeIsStarted = true;
+          // console.log(ranges[i].isGrowing);
+          // if(ranges[i].isGrowing) debugger
+        }
+        if (
+          ((i + 1) % 24 === 0 ||
+            ranges[i + 1].isChecked ||
+            !ranges[i + 1].isHighlighted) &&
+          ranges[i].isHighlighted
+        ) {
+          ranges[i - count].growFactor = count + 1;
+          rangeIsStarted = false;
+          count = 0;
+        }
       }
     }
     ranges.forEach((item) => {
@@ -136,7 +144,8 @@ const Ranges = () => {
     setRanges([...ranges]);
     setMouseIsActive(false);
     setSelectionStart("");
-    console.log(ranges);
+    setSelectionEnd("");
+    // console.log(ranges);
   };
 
   let content = normalized.map((hours, dayIndex) => (
@@ -170,7 +179,7 @@ const Ranges = () => {
         {content}
       </div>
       <div className={classes.actions}>
-          <button className={classes.btn} >
+          <button className={classes.btn} onClick={clearAllHandler}>
             CLEAR
           </button>
           <button className={classes.btn}>SAVE CHANGES</button>
