@@ -3,10 +3,6 @@ import classes from "./CalendarCell.module.css";
 
 const CalendarCell = ({
   value,
-  normalized,
-  setNormalized,
-  dayIndex,
-  hourIndex,
   id,
   isHighlighted,
   onClick,

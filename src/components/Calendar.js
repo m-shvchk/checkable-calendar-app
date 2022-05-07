@@ -128,6 +128,13 @@ const Calendar = () => {
     setSelectionStart("");
   };
 
+  const checkAllDayHandler = (dayIndex) => {
+    normalized[dayIndex].includes(false)
+      ? normalized[dayIndex].fill(true)
+      : normalized[dayIndex].fill(false);
+    setNormalized([...normalized]);
+  };
+
   let content = normalized.map((hours, dayIndex) => (
     <div className={classes.flex_row} key={dayIndex}>
       <div className={classes.day_column} key={numToDay[dayIndex]}>
@@ -136,9 +143,7 @@ const Calendar = () => {
 
       <AllDayCell
         hours={hours}
-        dayIndex={dayIndex}
-        normalized={normalized}
-        setNormalized={setNormalized}
+        onClick={() => checkAllDayHandler(dayIndex)}
       />
 
       {hours.map((val, hourIndex) => (
@@ -146,10 +151,6 @@ const Calendar = () => {
           value={val}
           key={`${dayIndex}-${hourIndex}`}
           id={`${dayIndex}-${hourIndex}`}
-          dayIndex={dayIndex}
-          hourIndex={hourIndex}
-          normalized={normalized}
-          setNormalized={setNormalized}
           isHighlighted={highlighted[dayIndex][hourIndex]}
           onClick={() => {
             normalized[dayIndex][hourIndex] = !normalized[dayIndex][hourIndex];
