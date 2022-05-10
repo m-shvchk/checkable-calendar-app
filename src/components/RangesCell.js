@@ -31,7 +31,7 @@ const RangesCell = ({
       id={id}
       onClick={onClick}
     >
-      {rangeNumber && <p>{rangeNumber}</p>}
+      {rangeNumber && <div className={classes.circle}><span>{rangeNumber}</span></div>}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 .hour__cell {
   flex-grow: 1;
   height: 8.5vh;
+  position: relative;
   box-shadow: 0.05vw 0 0 0 #4f4f46, 0 0.05vw 0 0 #4f4f46,
     0.05vw 0.05vw 0 0 #4f4f46, 0.05vw 0 0 0 #4f4f46 inset,
     0 0.05vw 0 0 #4f4f46 inset;
@@ -27,4 +28,39 @@
 }
 .hour__cell_checked:hover {
   background: rgba(143, 143, 126, 0.5);
+}
+
+@media screen and (max-width: 599px) {
+  .circle {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 779px) {
+  .circle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    display: inline-block;
+    font-weight: 600;
+  }
+}
+
+@media screen and (min-width: 780px) {
+  .circle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    display: inline-block;
+    border-radius: 50%;
+    min-width: 16px;
+    min-height: 16px;
+    padding: 2px;
+    background: #8f8f7e;
+    color: white;
+    text-align: center;
+    line-height: 1;
+    border: 1px solid black;
+    box-sizing: content-box;
+  }
 }
