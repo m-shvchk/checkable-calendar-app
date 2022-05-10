@@ -4,6 +4,7 @@ import classes from "./RangesCell.module.css";
 const RangesCell = ({
   isHighlighted,
   isGrowing,
+  rangeNumber,
   isShrinking,
   growFactor,
   id,
@@ -29,7 +30,9 @@ const RangesCell = ({
       style={rangesStyle}
       id={id}
       onClick={onClick}
-    ></div>
+    >
+      {rangeNumber && <p>{rangeNumber}</p>}
+    </div>
   );
 };
 

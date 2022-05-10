@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, useRef, Fragment } from "react";
 import classes from "./Ranges.module.css";
 import RangesCell from "./RangesCell";
 
@@ -16,6 +16,7 @@ for (let i = 0; i < inithialRanges.length; i++) {
     isHighlighted: false,
     isChecked: false,
     isGrowing: false,
+    rangeNumber: null,
     isShrinking: false,
     growFactor: null,
   };
@@ -25,46 +26,57 @@ const Ranges = () => {
   const [ranges, setRanges] = useState(inithialRanges);
   const [mouseIsActive, setMouseIsActive] = useState(false);
   const [selectionStart, setSelectionStart] = useState();
-  const [selectionEnd, setSelectionEnd] = useState();
+
+  const countRef = useRef(1);
 
   const clearAllHandler = () => {
-    ranges.forEach(item => {
+    ranges.forEach((item) => {
       item.isHighlighted = false;
       item.isChecked = false;
       item.isGrowing = false;
+      item.rangeNumber = null;
       item.isShrinking = false;
       item.growFactor = null;
-    })
-    setRanges([...ranges])
-  }
+    });
+    setRanges([...ranges]);
+    countRef.current = 1;
+  };
 
   const checkCellHandler = (dayIndex, hourIndex) => {
-      let cellIndex = dayIndex * 24 + hourIndex;
-      if (ranges[cellIndex].isGrowing) {
-        for (
-          let i = cellIndex + 1;
-          i < cellIndex + ranges[cellIndex].growFactor;
-          i++
-        ) {
-          ranges[i].isShrinking = false;
-          ranges[i].isChecked = false;
-        }
-        ranges[cellIndex].isGrowing = false;
-        ranges[cellIndex].isChecked = false;
-        ranges[cellIndex].growFactor = null;
-      } else{
-        ranges[cellIndex].isChecked = true;
-        ranges[cellIndex].isGrowing = true;
-        ranges[cellIndex].growFactor = 1;
+    let cellIndex = dayIndex * 24 + hourIndex;
+    if (ranges[cellIndex].isGrowing) {
+      for (
+        let i = cellIndex + 1;
+        i < cellIndex + ranges[cellIndex].growFactor;
+        i++
+      ) {
+        ranges[i].isShrinking = false;
+        ranges[i].isChecked = false;
       }
-      setRanges([...ranges]);
+      ranges[cellIndex].isGrowing = false;
+      ranges[cellIndex].isChecked = false;
+      ranges[cellIndex].growFactor = null;
+      ranges[cellIndex].rangeNumber = null;
+    } else {
+      ranges[cellIndex].isChecked = true;
+      ranges[cellIndex].isGrowing = true;
+      ranges[cellIndex].growFactor = 1;
+    }
+    ranges.forEach(item => {
+      if(item.isGrowing){
+        item.rangeNumber = countRef.current;
+        countRef.current++;
+      }
+      console.log(countRef.current)
+    })
+    countRef.current = 1;
+    setRanges([...ranges]);
   };
 
   const mouseDownRangesHandler = (e) => {
     const id = e.target.id;
     if (!id) return;
     const [x, y] = id.split("-");
-    // if (normalized[x][y]) return;
     setSelectionStart({ x, y });
     setMouseIsActive(true);
   };
@@ -74,7 +86,6 @@ const Ranges = () => {
     const id = e.target.id;
     if (id) {
       const [x, y] = id.split("-");
-      setSelectionEnd({x, y})
 
       let x1 = parseInt(selectionStart.x);
       let y1 = parseInt(selectionStart.y);
@@ -98,13 +109,14 @@ const Ranges = () => {
     }
   };
   const mouseUpRangesHandler = (e) => {
-    if(selectionStart.x !== selectionEnd.x || selectionStart.y !== selectionEnd.y){
+    const id = e.target.id;
+    const [x, y] = id.split("-");
+    if (selectionStart.x !== x || selectionStart.y !== y) {
       let count = 0;
       let rangeIsStarted = false;
-  
+
       for (let i = 0; i < ranges.length; i++) {
-        // console.log('i: ', i, ' count: ', count, ' started ', rangeIsStarted)
-  
+
         if (ranges[i].isChecked) {
           ranges[i].isHighlighted = false;
         }
@@ -139,13 +151,18 @@ const Ranges = () => {
       if (item.isHighlighted) {
         item.isChecked = true;
       }
+      if(item.isGrowing){
+        item.rangeNumber = countRef.current;
+        countRef.current++;
+      }
       item.isHighlighted = false;
     });
+
+    countRef.current = 1;
     setRanges([...ranges]);
     setMouseIsActive(false);
     setSelectionStart("");
-    setSelectionEnd("");
-    // console.log(ranges);
+    console.log(ranges);
   };
 
   let content = normalized.map((hours, dayIndex) => (
@@ -159,8 +176,8 @@ const Ranges = () => {
           key={`${dayIndex}-${hourIndex}`}
           id={`${dayIndex}-${hourIndex}`}
           isHighlighted={ranges[dayIndex * 24 + hourIndex].isHighlighted}
-          isChecked={ranges[dayIndex * 24 + hourIndex].isChecked}
           isGrowing={ranges[dayIndex * 24 + hourIndex].isGrowing}
+          rangeNumber={ranges[dayIndex * 24 + hourIndex].rangeNumber}
           isShrinking={ranges[dayIndex * 24 + hourIndex].isShrinking}
           growFactor={ranges[dayIndex * 24 + hourIndex].growFactor}
           onClick={() => checkCellHandler(dayIndex, hourIndex)}
@@ -179,12 +196,11 @@ const Ranges = () => {
         {content}
       </div>
       <div className={classes.actions}>
-          <button className={classes.btn} onClick={clearAllHandler}>
-            CLEAR
-          </button>
-          <button className={classes.btn}>SAVE CHANGES</button>
-        </div>
-
+        <button className={classes.btn} onClick={clearAllHandler}>
+          CLEAR
+        </button>
+        <button className={classes.btn}>SAVE CHANGES</button>
+      </div>
     </Fragment>
   );
 };
