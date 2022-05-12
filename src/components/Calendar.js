@@ -2,6 +2,7 @@ import classes from "./Calendar.module.css";
 import CalendarCell from "./CalendarCell";
 import AllDayCell from "./AllDayCell";
 import React, { useState, Fragment } from "react";
+import {dayToNum, numToDay} from '../constants/constants'
 
 const initialData = {
   mo: [
@@ -37,8 +38,8 @@ const initialData = {
   su: [],
 };
 
-const dayToNum = { mo: 0, tu: 1, we: 2, th: 3, fr: 4, sa: 5, su: 6 };
-const numToDay = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+// const dayToNum = { mo: 0, tu: 1, we: 2, th: 3, fr: 4, sa: 5, su: 6 };
+// const numToDay = ["mo", "tu", "we", "th", "fr", "sa", "su"];
 const normalizedArr = [];
 
 Object.entries(initialData).forEach(([day, value]) => {
@@ -135,6 +136,25 @@ const Calendar = () => {
     setNormalized([...normalized]);
   };
 
+  const transformAndSendDataHandler = () => {
+    const finalData = {}
+    normalized.forEach((hours, dayIndex) => {
+      const ranges = finalData[numToDay[dayIndex]] = [];
+      hours.forEach((checked, hourIndex) => {
+        if(
+          (!hours[hourIndex - 1] || !hourIndex)
+          && hours[hourIndex]
+        ){
+          ranges.push({'bt': hourIndex*60})
+        }
+        if(!hours[hourIndex + 1] && checked){
+          ranges[ranges.length - 1].et = (hourIndex + 1)*60 - 1;
+        }
+      })
+    })
+    console.log(finalData)
+  }
+
   let content = normalized.map((hours, dayIndex) => (
     <div className={classes.flex_row} key={dayIndex}>
       <div className={classes.day_column} key={numToDay[dayIndex]}>
@@ -174,7 +194,7 @@ const Calendar = () => {
         <button className={classes.btn} onClick={clearAllHandler}>
           CLEAR
         </button>
-        <button className={classes.btn}>SAVE CHANGES</button>
+        <button className={classes.btn} onClick={transformAndSendDataHandler}>SAVE CHANGES</button>
       </div>
     </Fragment>
   );
