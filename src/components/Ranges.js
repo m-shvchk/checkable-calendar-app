@@ -1,9 +1,41 @@
 import { useState, useRef, Fragment } from "react";
 import classes from "./Ranges.module.css";
 import RangesCell from "./RangesCell";
+import { numToDay, dayToNum } from "../constants/constants";
 
-// const dayToNum = { mo: 0, tu: 1, we: 2, th: 3, fr: 4, sa: 5, su: 6 };
-const numToDay = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+const initialData = {
+  mo: [
+    {bt: 0, et: 59}, 
+    {bt: 60, et: 119}, 
+    {bt: 180, et: 359}, 
+    {bt: 360, et: 539}
+  ],
+  tu: [],
+  we: [],
+  th: [
+    {
+      bt: 240,
+      et: 779,
+    },
+    {
+      bt: 1140,
+      et: 1319,
+    },
+  ],
+  fr: [
+    {
+      bt: 660,
+      et: 1019,
+    },
+  ],
+  sa: [
+    {
+      bt: 0,
+      et: 1439,
+    },
+  ],
+  su: [],
+};
 
 const normalized = new Array(7);
 for (let i = 0; i < normalized.length; i++) {
@@ -21,6 +53,23 @@ for (let i = 0; i < inithialRanges.length; i++) {
     growFactor: null,
   };
 }
+
+let count = 1;
+Object.entries(initialData).forEach(([day, value]) => {
+  value.forEach((val) => {
+    const start = dayToNum[day] * 24 + val.bt / 60;
+    const end = dayToNum[day] * 24 + (val.et + 1) / 60;
+    inithialRanges[start].isChecked = true;
+    inithialRanges[start].isGrowing = true;
+    inithialRanges[start].rangeNumber = count;
+    count = count + 1;
+    inithialRanges[start].growFactor = end - start;
+    for (let i = start + 1; i < end; i++) {
+      inithialRanges[i].isChecked = true;
+      inithialRanges[i].isShrinking = true;
+    }
+  });
+});
 
 const Ranges = () => {
   const [ranges, setRanges] = useState(inithialRanges);
@@ -62,13 +111,13 @@ const Ranges = () => {
       ranges[cellIndex].isGrowing = true;
       ranges[cellIndex].growFactor = 1;
     }
-    ranges.forEach(item => {
-      if(item.isGrowing){
+    ranges.forEach((item) => {
+      if (item.isGrowing) {
         item.rangeNumber = countRef.current;
         countRef.current++;
       }
-      console.log(countRef.current)
-    })
+      console.log(countRef.current);
+    });
     countRef.current = 1;
     setRanges([...ranges]);
   };
@@ -116,7 +165,6 @@ const Ranges = () => {
       let rangeIsStarted = false;
 
       for (let i = 0; i < ranges.length; i++) {
-
         if (ranges[i].isChecked) {
           ranges[i].isHighlighted = false;
         }
@@ -151,7 +199,7 @@ const Ranges = () => {
       if (item.isHighlighted) {
         item.isChecked = true;
       }
-      if(item.isGrowing){
+      if (item.isGrowing) {
         item.rangeNumber = countRef.current;
         countRef.current++;
       }
@@ -163,6 +211,30 @@ const Ranges = () => {
     setMouseIsActive(false);
     setSelectionStart("");
     console.log(ranges);
+  };
+
+  const transformAndSendDataHandler = () => {
+    const finalData = {};
+    for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+      const dayRanges = (finalData[numToDay[dayIndex]] = []);
+      for (let hourIndex = 0; hourIndex < 24; hourIndex++) {
+        if (ranges[dayIndex * 24 + hourIndex].growFactor === 1) {
+          dayRanges.push({ bt: hourIndex * 60, et: hourIndex * 60 + 59 });
+        } else {
+          if (ranges[dayIndex * 24 + hourIndex].isGrowing) {
+            dayRanges.push({ bt: hourIndex * 60 });
+          }
+          if (
+            (dayIndex * 24 + hourIndex + 1 === ranges.length ||
+              !ranges[dayIndex * 24 + hourIndex + 1].isShrinking) &&
+            ranges[dayIndex * 24 + hourIndex].isShrinking
+          ) {
+            dayRanges[dayRanges.length - 1].et = (hourIndex + 1) * 60 - 1;
+          }
+        }
+      }
+    }
+    console.log(finalData);
   };
 
   let content = normalized.map((hours, dayIndex) => (
@@ -199,7 +271,9 @@ const Ranges = () => {
         <button className={classes.btn} onClick={clearAllHandler}>
           CLEAR
         </button>
-        <button className={classes.btn}>SAVE CHANGES</button>
+        <button className={classes.btn} onClick={transformAndSendDataHandler}>
+          SAVE CHANGES
+        </button>
       </div>
     </Fragment>
   );

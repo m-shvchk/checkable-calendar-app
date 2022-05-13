@@ -28,7 +28,6 @@ const App = () => {
         <Header calendarRangesTogglee={calendarRangesTogglee} />
 
         {calendarRangesTogglee ? <Calendar /> : <Ranges />}
-
       </div>
     </Fragment>
   );
